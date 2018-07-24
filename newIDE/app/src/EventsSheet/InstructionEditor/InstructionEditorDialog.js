@@ -2,6 +2,7 @@ import React from 'react';
 import Dialog from '../../UI/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import InstructionEditor from './index.js';
+import InstructionHelpLink from './InstructionHelpLink';
 
 const styles = {
   dialogContent: {
@@ -26,13 +27,16 @@ export default class InstructionEditorDialog extends React.Component {
   }
 
   render() {
+    const { instruction, isCondition } = this.props;
     const actions = [
       <FlatButton
+        key="cancel"
         label="Cancel"
         primary={false}
         onClick={this.props.onCancel}
       />,
       <FlatButton
+        key="ok"
         label="Ok"
         primary={true}
         keyboardFocused={false}
@@ -43,12 +47,22 @@ export default class InstructionEditorDialog extends React.Component {
     return (
       <Dialog
         actions={actions}
+        secondaryActions={
+          <InstructionHelpLink
+            key="help-link"
+            instructionType={instruction.getType()}
+            isCondition={isCondition}
+          />
+        }
         open={this.props.open}
         onRequestClose={this.props.onCancel}
         contentStyle={styles.dialogContent}
         bodyStyle={styles.dialogBody}
       >
-        <InstructionEditor {...this.props} />
+        <InstructionEditor
+          {...this.props}
+          onTypeChosen={() => this.forceUpdate()}
+        />
       </Dialog>
     );
   }
